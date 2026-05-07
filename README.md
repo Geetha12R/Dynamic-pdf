@@ -8,7 +8,7 @@ The application synchronizes user interaction between the PDF viewer and the for
 ## 🚀 Live Demo
 
 Deployed on Vercel:  
-https://dynamic-2q52ejq0k-geetha12rs-projects.vercel.app/
+https://dynamic-pdf-mu.vercel.app/
 
 ---
 
