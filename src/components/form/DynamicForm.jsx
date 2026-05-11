@@ -7,6 +7,8 @@ import CheckboxField from "./InputFields/CheckboxField";
 import { motion } from "framer-motion";
 import { formHeader, formMotion } from "./formStyles";
 import { DateField } from "./InputFields/DateField";
+import { useCallback, useMemo } from "react";
+import { debounce } from "./debounce";
 
 const formVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -15,13 +17,22 @@ const formVariants = {
 
 export default function DynamicForm() {
   // utilising actions and selectors
-  const { fields, activeField, selectField, updateFieldValue } = useForm();
+  const { fields, selectField, updateFieldValue } = useForm();
 
   // handles form field selection
-  const handleSelect = (id) => () => selectField(id);
+  const handleSelect = useCallback(
+    (id) => () => selectField(id),
+    [selectField],
+  );
   // handles form field value update
-  const handleType = (id, type) => (e) =>
-    updateFieldValue(id, e.target.value, type);
+  const debouncedUpdate = useMemo(
+    () => debounce(updateFieldValue),
+    [updateFieldValue]
+  );
+
+  const handleType = (id, val, type) => {
+    debouncedUpdate(id, val, type);
+  };
 
   // handles rendering different fields
   const renderField = (field) => {
@@ -36,9 +47,8 @@ export default function DynamicForm() {
           value={field.value}
           error={field.error}
           message={field.message}
-          activeField={activeField}
           onSelect={handleSelect(field.id)}
-          onType={handleType(field.id, field.type)}
+          onType={(e) => handleType(field.id, e.target.value, field.type)}
         />
       );
     }
@@ -52,7 +62,7 @@ export default function DynamicForm() {
           value={field.value}
           options={field.options}
           onSelect={handleSelect(field.id)}
-          onChange={(val) => updateFieldValue(field.id, val, field.type)}
+          onChange={(val) => handleType(field.id, val, field.type)}
         />
       );
     }
@@ -67,7 +77,7 @@ export default function DynamicForm() {
           error={field.error}
           message={field.message}
           onSelect={handleSelect(field.id)}
-          onChange={(val) => updateFieldValue(field.id, val, field.type)}
+          onChange={(val) => handleType(field.id, val, field.type)}
         />
       );
     }
@@ -81,9 +91,8 @@ export default function DynamicForm() {
           value={field.value}
           error={field.error}
           message={field.message}
-          isActive={activeField}
           onSelect={() => selectField(field.id)}
-          onType={(e) => updateFieldValue(field.id, e.target.value, field.type)}
+          onType={(e) => handleType(field.id, e.target.value, field.type)}
         />
       );
     }

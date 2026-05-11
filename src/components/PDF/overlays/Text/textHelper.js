@@ -1,16 +1,16 @@
-function getTextHighlightPosition({ x, y, width, height }) {
+function getTextHighlightPosition({ x, y, width, height }, scale) {
   return {
-    left: x - 1,
-    top: y + 4,
-    width,
-    height,
+    left: x *scale,
+    top: y *scale ,
+    width: width*scale,
+    height: height*scale,
   };
 }
 
-function getTextPosition({ x, y }) {
+function getTextPosition({ x, y },scale) {
   return {
-    left: x + 5,
-    top: y + 5,
+    left: x *scale,
+    top: y *scale ,
   };
 }
 

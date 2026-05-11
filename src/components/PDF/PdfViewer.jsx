@@ -8,14 +8,17 @@ import BaseOverlay from "./BaseOverlay";
 export default function PdfViewer() {
   const { fields, activeField } = useForm();
 
-  const pageWrapperRef = useRef(null);
   const [pageSize, setPageSize] = useState({ width: 600, height: 800 });
   const [isLoading, setIsLoading] = useState(true);
 
+   const [containerWidth, setContainerWidth] = useState(600);
+
+  // scale factor for responsiveness
+  const scale = containerWidth / pageSize.width;
+  
   return (
     <div className="flex justify-center">
       <div
-        ref={pageWrapperRef}
         className="relative"
         style={{
           width: pageSize.width,
@@ -29,6 +32,7 @@ export default function PdfViewer() {
           <BaseOverlay
             key={field.id}
             field={field}
+            scale={scale}
             isActive={activeField === field.id}
           />
         ))}

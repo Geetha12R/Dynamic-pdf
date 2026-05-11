@@ -8,10 +8,16 @@ import { extractFieldsFromPDF } from "../data/mockFields";
 // store creation with form reducer, allows multiple reducers support
 const store = configureStore({
   reducer: {
-    form: formReducer
+    form: formReducer,
+  },
+    preloadedState: {
+      form: {
+      fields: extractFieldsFromPDF(),
+      activeField: null
+    }
   }
 });
 // initially loading the fields from JSON to store
-store.dispatch(setFields(extractFieldsFromPDF()));
+// store.dispatch(setFields(extractFieldsFromPDF()));
 
 export default store;
